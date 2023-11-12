@@ -140,7 +140,6 @@ def main():
     c_data = []  # specific molar heat data
     y_data = []  # specific molar heat per temp data
     y_err = []  # specific molar heat per temperature uncertainty
-    s = 0  # Molar entropy change
     for line in data.readlines():
         if not line.startswith("#"):
             tokens = line.split()
@@ -152,18 +151,28 @@ def main():
             c_data.append(y)
             y_data.append(z)
             y_err.append(uncertainty_CbyT(x, y, z))
+    s = 0  # Molar entropy change
     s_err = []  # error in entropy calculation
-    for i in range(len(t_data)-1):
+    start = 1137
+    end = 2145
+    y_new = []
+    x_new = []
+    for i in range(start, end):
         s += integration(y_data[i], t_data[i], t_data[i+1])
         s_err.append(uncertainty_s(t_data[i], c_data[i], y_data[i], s))
+        y_new.append(y_data[i])
+        x_new.append(t_data[i])
 
     # Figure 1 shows Cp against T
     fig1 = plot(1, "Background subtracted specific molar heat capacity (R)",
-                "Temperature (K)", "Thermal_fig_1", t_data, c_data, 0, t_err)
+                "Temperature (K)", "Thermal_fig_1", t_data, c_data, 0, 0)
 
     # Figure 2 shows Cp/T against T
     fig2 = plot(2, "Specific Molar heat capacity per temperature (R/K)",
-                "Temperature (K)", "Thermal_fig_2", t_data, y_data, y_err, t_err)
+                "Temperature (K)", "Thermal_fig_2", t_data, y_data, 0, 0)
+    # Figure 3 shows Cp/T against T within the integration bounds (start, end)
+    fig3 = plot(3, "Specific Molar heat capacity per temperature (R/K)",
+                "Temperature (K)", "Thermal_fig_3", x_new, y_new, 0, 0)
 
     # Uncertainty in s = sqrt(sum(ds**2))
     ds = []
@@ -172,8 +181,8 @@ def main():
     s_err = sum(ds)
     s_err = math.sqrt(s_err)
     print(f"Molar Entropy change, S = {s:.02} ({round(10*s_err)}) R")
-    print("Value given in article, S = 0.45 (4) R")
-    diff = abs(0.45-s)/s_err
+    print("Value given in article, S = 0.39 (4) R")
+    diff = abs(0.39-s)/s_err
     print(f"Calculated value is different by {diff:.03} error values")
 
 

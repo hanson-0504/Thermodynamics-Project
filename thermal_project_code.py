@@ -179,11 +179,8 @@ def main():
     for i in range(len(s_err)):
         ds.append(s_err[i]**2)
     s_err = sum(ds)
-    s_err = math.sqrt(s_err)/math.sqrt(end-start)
-    print(f"Molar Entropy change, S = {s:.02} ({s_err:.02}) R")
-    print("Value given in article, S = 0.39 (4) R")
-    diff = abs(0.39-s)/s_err
-    print(f"Calculated value is different by {diff:.03} error values")
+    s_err = math.sqrt(s_err)
+    print(f"Molar Entropy change, S = {s:.02} + {s_err:.01} R")
 
 
 main()

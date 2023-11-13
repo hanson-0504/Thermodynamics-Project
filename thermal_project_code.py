@@ -181,6 +181,8 @@ def main():
     s_err = sum(ds)
     s_err = math.sqrt(s_err)
     print(f"Molar Entropy change, S = {s:.02} + {s_err:.01} R")
+    print("Integration bounds:")
+    print(f"start = {t_data[start]} K, end = {t_data[end]} K")
 
 
 main()

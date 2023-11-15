@@ -11,13 +11,12 @@ import scipy.signal as ss
 import matplotlib.pyplot as plt
 
 
-def plot(i, ylabel, xlabel, filename, x, y, yerr, xerr):
+def plotter(ylabel, xlabel, filename, x, y, yerr, xerr, peak):
     """
     Plotting Function
     Creates a figure and plots (x,y), includes axis labels
     Parameters
     ----------
-    i : Figure Number, int.
     ylabel : y_axis label, str.
     xlabel : x_axis label, str.
     filename : Name of file which saves the figure as, str.
@@ -25,14 +24,16 @@ def plot(i, ylabel, xlabel, filename, x, y, yerr, xerr):
     y : list of data points for the y coordinates, list.
     yerr : error in the y coordinates, list.
     xerr : error in the x coordinates, list.
+    peak: Peak of graph, int.
     """
-    fig = plt.figure(i)
+    fig, ax = plt.subplots()
     plt.plot(x, y)
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
-    fig.savefig(filename)
     plt.errorbar(x, y, yerr=yerr, xerr=xerr)
+    ax.annotate(f"T_c = {x[peak]} K", (x[peak], y[peak]), (x[peak]-75, y[peak-5]), arrowprops=dict(shrink=0.05))
     plt.show()
+    fig.savefig(filename)
 
 
 def integration(c, t1, t2):
@@ -181,15 +182,16 @@ def main():
     print(f"Critical Temperature: T_c = {t_data[peak[0]]} K.")
     
     # Figure 1 shows Cp against T
-    fig1 = plot(1, "Background subtracted specific molar heat capacity (R)",
-                "Temperature (K)", "Thermal_fig_1", t_data, c_data, 0, 0)
+    fig1 = plotter("Background subtracted specific molar heat capacity (R)",
+                   "Temperature (K)", "Thermal_fig_1", t_data, c_data, 0, 0, peak)
 
     # Figure 2 shows Cp/T against T
-    fig2 = plot(2, "Specific Molar heat capacity per temperature (R/K)",
-                "Temperature (K)", "Thermal_fig_2", t_data, y_data, 0, 0)
+    fig2 = plotter("Specific Molar heat capacity per temperature (R/K)",
+                   "Temperature (K)", "Thermal_fig_2", t_data, y_data, 0, 0, peak)
+
     # Figure 3 shows Cp/T against T within the integration bounds (start, end)
-    fig3 = plot(3, "Specific Molar heat capacity per temperature (R/K)",
-                "Temperature (K)", "Thermal_fig_3", x_new, y_new, 0, 0)
+    fig3 = plotter("Specific Molar heat capacity per temperature (R/K)",
+                   "Temperature (K)", "Thermal_fig_3", x_new, y_new, 0, 0, peak-start)
 
 
 main()

@@ -6,6 +6,8 @@ Thermal Project Code:
     Cu3Au, extract the excess entropy associated with the data.
 """
 import math
+import numpy as np
+import scipy.signal as ss
 import matplotlib.pyplot as plt
 
 
@@ -163,6 +165,21 @@ def main():
         y_new.append(y_data[i])
         x_new.append(t_data[i])
 
+    # Uncertainty in s = sqrt(sum(ds**2))
+    ds = []
+    for i in range(len(s_err)):
+        ds.append(s_err[i]**2)
+    s_err = sum(ds)
+    s_err = math.sqrt(s_err)
+    print(f"Molar Entropy change, S = {s:.02} + {s_err:.01} R")
+    print("Integration bounds:")
+    print(f"start = {t_data[start]} K, end = {t_data[end]} K")
+
+    # Find Critical Temperature
+    peak,_ = ss.find_peaks(y_data, height=0.025)
+    peak = np.array(peak)
+    print(f"Critical Temperature: T_c = {t_data[peak[0]]} K.")
+    
     # Figure 1 shows Cp against T
     fig1 = plot(1, "Background subtracted specific molar heat capacity (R)",
                 "Temperature (K)", "Thermal_fig_1", t_data, c_data, 0, 0)
@@ -173,16 +190,6 @@ def main():
     # Figure 3 shows Cp/T against T within the integration bounds (start, end)
     fig3 = plot(3, "Specific Molar heat capacity per temperature (R/K)",
                 "Temperature (K)", "Thermal_fig_3", x_new, y_new, 0, 0)
-
-    # Uncertainty in s = sqrt(sum(ds**2))
-    ds = []
-    for i in range(len(s_err)):
-        ds.append(s_err[i]**2)
-    s_err = sum(ds)
-    s_err = math.sqrt(s_err)
-    print(f"Molar Entropy change, S = {s:.02} + {s_err:.01} R")
-    print("Integration bounds:")
-    print(f"start = {t_data[start]} K, end = {t_data[end]} K")
 
 
 main()

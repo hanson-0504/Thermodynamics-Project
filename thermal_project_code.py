@@ -6,9 +6,8 @@ Thermal Project Code:
     Cu3Au, extract the excess entropy associated with the data.
 """
 import math
-import numpy as np
-import scipy.signal as ss
 import matplotlib.pyplot as plt
+import scipy.signal as ss
 
 
 def plotter(ylabel, xlabel, filename, x, y, yerr, xerr, peak):
@@ -31,7 +30,9 @@ def plotter(ylabel, xlabel, filename, x, y, yerr, xerr, peak):
     plt.ylabel(ylabel)
     plt.xlabel(xlabel)
     plt.errorbar(x, y, yerr=yerr, xerr=xerr)
-    ax.annotate(f"T_c = {x[peak]} K", (x[peak], y[peak]), (x[peak]-75, y[peak-5]), arrowprops=dict(shrink=0.05))
+    ax.annotate(
+        f"T_c = {x[peak]} K", (x[peak], y[peak]), (x[peak]-75, y[peak-5]), 
+        arrowprops=dict(shrink=0.05))
     plt.show()
     fig.savefig(filename)
 

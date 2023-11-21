@@ -1,5 +1,5 @@
 # Thermal Project data
-# T (K)   delta C_p ()
+# T (K)   delta C_p (R)
 500.04	-0.0144685
 500.12	-0.0133785
 500.21	-0.0145685
